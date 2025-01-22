@@ -1,0 +1,72 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh18400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- Creating the database\
+CREATE DATABASE EmployeeManagement;\
+\
+-- Using the database\
+USE EmployeeManagement;\
+\
+-- Creating the Employees table\
+CREATE TABLE Employees (\
+    EmployeeID INT PRIMARY KEY,\
+    Name VARCHAR(50),\
+    HireDate DATE,\
+    Salary DECIMAL(10, 2),\
+    DepartmentID INT\
+);\
+\
+-- Creating the Departments table\
+CREATE TABLE Departments (\
+    DepartmentID INT PRIMARY KEY,\
+    DepartmentName VARCHAR(50)\
+);\
+\
+-- Inserting sample data into Employees table\
+INSERT INTO Employees (EmployeeID, Name, HireDate, Salary, DepartmentID)\
+VALUES \
+(1, 'Alice', '2022-01-10', 60000, 1),\
+(2, 'Bob', '2020-02-15', 70000, 2),\
+(3, 'Charlie', '2021-06-25', 80000, 3),\
+(4, 'Daisy', '2019-11-11', 90000, NULL),\
+\
+-- Inserting sample data into Departments table\
+INSERT INTO Departments (DepartmentID, DepartmentName)\
+VALUES \
+(1, 'HR'),\
+(2, 'Finance'),\
+(3, 'IT'),\
+\
+-- Question 1: List the names of employees hired after January 1, 2021\
+SELECT Name\
+FROM Employees\
+WHERE HireDate > '2021-01-01';\
+\
+-- Question 2: Calculate the average salary of employees in each department\
+SELECT d.DepartmentName, AVG(e.Salary) AS AverageSalary\
+FROM Employees e\
+JOIN Departments d ON e.DepartmentID = d.DepartmentID\
+GROUP BY d.DepartmentName;\
+\
+-- Question 3: Find the department name where the total salary is the highest\
+SELECT d.DepartmentName\
+FROM Employees e\
+JOIN Departments d ON e.DepartmentID = d.DepartmentID\
+GROUP BY d.DepartmentName\
+ORDER BY SUM(e.Salary) DESC\
+LIMIT 1;\
+\
+-- Question 4: List all departments that currently have no employees assigned\
+SELECT DepartmentName\
+FROM Departments\
+WHERE DepartmentID NOT IN (SELECT DISTINCT DepartmentID FROM Employees);\
+\
+-- Question 5: Fetch all employee details along with their department names\
+SELECT e.EmployeeID, e.Name, e.HireDate, e.Salary, d.DepartmentName\
+FROM Employees e\
+LEFT JOIN Departments d ON e.DepartmentID = d.DepartmentID;\
+}
